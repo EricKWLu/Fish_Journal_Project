@@ -11,12 +11,6 @@ interface Blog {
 }
 
 export const CreatePage = () => {
-    const [blogs, setBlogs] = useState<Blog[]>([]);
-
-    const addBlog = (blog: Blog): void => {
-        setBlogs([...blogs, blog]);
-    };
-
     return (
         <Box sx = {{
             minWidth: '100vw',
@@ -37,7 +31,7 @@ export const CreatePage = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <PostInput addBlog={addBlog} />
+                <PostInput/>
             </Box>
         </Box>
     )
