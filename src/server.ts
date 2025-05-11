@@ -10,8 +10,10 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import process from 'process';
-import { echo, clear, error } from './debug';
 import { handleError } from './errors';
+import { loadBlogs, saveBlogs } from '../dataStore';
+import { createBlog } from './blogs'
+import { clear } from './clear';
 
 const app = express();
 app.use(json());
@@ -35,34 +37,31 @@ function withErrorHandler<T>(res: Response, callback: () => T): T | undefined {
   }
 }
 
-// Debug routes
 // ==================================================
-// Note that in the real world, you should disable these when your app is running in production.
 
-/** GET /debug/echo?value=ping */
-app.get('/debug/echo', (req, res) => {
-  withErrorHandler(res, () => {
-    res.json(echo(req.query.value as string));
-  });
-});
+//Clear data
+app.delete('/v1/clear', (req, res) => {
+  const result = clear();
+  saveBlogs();
+  return res.status(200).json(result);
+})
 
-/** GET /debug/error?code=401 */
-app.get('/debug/error', (req, res) => {
-  withErrorHandler(res, () => {
-    res.json(error(parseInt(req.query.code as string)));
-  });
-});
+//Create a new blog
+app.post('/v1/blog/create', (req, res) => {
+  const { title, content, species, date, location } = req.body;
+  loadBlogs();
 
-/** DELETE /debug/clear */
-app.delete('/debug/clear', (req, res) => {
-  withErrorHandler(res, () => {
-    clear();
-    res.json({});
-  });
-});
+  let result;
 
-// TODO: Add your routes here
-// ==================================================
+  try {
+    result = createBlog(title, content, species, date, location);
+  } catch (error) {
+    return res.status(400).json({error: error.message});
+  }
+
+  saveBlogs();
+  return res.status(200).json(result);
+})
 
 // Start server
 const server = app.listen(PORT, IP, () => {

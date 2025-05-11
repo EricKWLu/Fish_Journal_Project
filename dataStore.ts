@@ -1,20 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { Blog, BlogData } from './types';
 
 const BLOGS_FILE = path.resolve(__dirname, 'blogs.json');
-
-
-interface Blog {
-    title: string;
-    content: string;
-    species: string;
-    date: string;
-    location: string;
-}
-
-interface BlogData {
-    blogs: Blog[]
-}
 
 const blogData: BlogData = {
     blogs: []
