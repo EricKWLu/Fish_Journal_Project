@@ -4,23 +4,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import { getBlogs } from '../../../dataStore'
-
-// Define a TypeScript interface for the blog
-interface Blog {
-  title: string;
-  content: string;
-  species: string;
-  date: string;
-  location: string;
-}
-
-// Local data store
-const blogDataStore = getBlogs();
-
-const storeData = (blog: Blog) => {
-  blogDataStore.blogs.push(blog);
-};
+import { createBlogWrapperF } from '../frontendWrappers';
+import { data } from 'react-router-dom';
 
 //CREATE AN API AND CALL THAT TO PROPERLY STORE BLOGS
 
@@ -34,13 +19,9 @@ const PostInput: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (title && date && species && location && content) {
-      storeData({
-        title,
-        date: date.toISOString(),
-        species,
-        location,
-        content
-      });
+
+      createBlogWrapperF(title, date.toISOString(), species, location, content);
+
       setTitle("");
       setDate(dayjs());
       setSpecies("");
