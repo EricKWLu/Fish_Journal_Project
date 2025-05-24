@@ -25,3 +25,15 @@ export function createBlogWrapper(title: string, date: string, species: string, 
 
   return body;
 }
+
+export function listBlogWrapper() {
+  const res = request('GET', `${url}/v1/blog/list`);
+
+  const body = JSON.parse(res.body.toString());
+  if ([400].includes(res.statusCode)) {
+    expect(body).toStrictEqual({ error: expect.any(String) });
+    return res.statusCode;
+  }
+
+  return body;
+}

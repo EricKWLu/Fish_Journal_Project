@@ -33,3 +33,17 @@ export function createBlog(title: string, date: string, species: string, locatio
     console.log('Created new blog with details ' + newBlog);
     return { blogId: blogId };
 }
+
+/**
+ * Gets all current blogs and returns an object with the number of blogs and an array containing all blogs
+ * 
+ * @returns {obj<size: number, blogs: array>}
+ */
+export function listBlogs() {
+    const blogData: BlogData = getBlogs();
+
+    const size: Number = blogData.blogs.length;
+    const array: Blog[] = blogData.blogs;
+
+    return { size: size, blogs: array };
+}

@@ -1,28 +1,3 @@
 {
-  "blogs": [
-    {
-      "blogId": 1,
-      "title": "Title",
-      "date": "Caught a bream oh my god!!!",
-      "species": "Bream",
-      "location": "12/10/25",
-      "content": "Wentworth Point"
-    },
-    {
-      "blogId": 2,
-      "title": "Title2",
-      "date": "Caught a bream oh my god!!!",
-      "species": "Bream",
-      "location": "12/10/25",
-      "content": "Wentworth Point"
-    },
-    {
-      "blogId": 3,
-      "title": "Testing",
-      "date": "Wow I caught something crazy",
-      "species": "Bream",
-      "location": "2025-05-11T08:40:58.759Z",
-      "content": "Wentworth Point"
-    }
-  ]
+  "blogs": []
 }

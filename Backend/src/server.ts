@@ -12,7 +12,7 @@ import cors from 'cors';
 import process from 'process';
 import { handleError } from './errors';
 import { loadBlogs, saveBlogs } from '../dataStore';
-import { createBlog } from './blogs'
+import { createBlog, listBlogs } from './blogs'
 import { clear } from './clear';
 
 const app = express();
@@ -60,6 +60,18 @@ app.post('/v1/blog/create', (req, res) => {
   }
 
   saveBlogs();
+  return res.status(200).json(result);
+})
+
+app.get('/v1/blog/list', (req, res) => {
+  let result;
+
+  try {
+    result = listBlogs();
+  } catch (error) {
+    return res.status(400).json({error: error.message});
+  }
+
   return res.status(200).json(result);
 })
 
