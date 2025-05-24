@@ -9,6 +9,24 @@ export async function clearWrapperF() {
     return body;
 }
 
+export async function blogListF() {
+  const res = await fetch(`${API_URL}/v1/blog/list`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const body = await res.json();
+
+    if (res.status === 400) {
+      console.error(body.error);
+      return res.status;
+    }
+  
+    return body;
+}
+
 export async function createBlogWrapperF(
     title: string,
     date: string,

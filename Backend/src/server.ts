@@ -54,7 +54,7 @@ app.post('/v1/blog/create', (req, res) => {
   let result;
 
   try {
-    result = createBlog(title, content, species, date, location);
+    result = createBlog(title, date, species, location, content);
   } catch (error) {
     return res.status(400).json({error: error.message});
   }
@@ -64,6 +64,7 @@ app.post('/v1/blog/create', (req, res) => {
 })
 
 app.get('/v1/blog/list', (req, res) => {
+  loadBlogs();
   let result;
 
   try {
