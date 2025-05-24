@@ -30,5 +30,6 @@ export function createBlog(title: string, date: string, species: string, locatio
 
     blogData.blogs.push(newBlog);
 
+    console.log('Created new blog with details ' + newBlog);
     return { blogId: blogId };
 }
