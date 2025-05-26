@@ -1,5 +1,6 @@
 import { Box, Button, createTheme, TextField, ThemeProvider, Typography } from "@mui/material"
 import { useState } from 'react';
+import BlogList from '../components/blogLists'
 
 export const Home = () => {
     const [blogs, setBlogs] = useState([]);
@@ -11,7 +12,7 @@ export const Home = () => {
             backgroundColor: 'white'
 
         }}>
-            Home
+            <BlogList />
         </Box>
     )
 }

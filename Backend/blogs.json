@@ -1,0 +1,36 @@
+{
+  "blogs": [
+    {
+      "blogId": 1,
+      "title": "Testing List",
+      "date": "Cool!",
+      "species": "Bream",
+      "location": "2025-05-24T12:21:58.995Z",
+      "content": "Wentworth Point"
+    },
+    {
+      "blogId": 2,
+      "title": "New List",
+      "date": "asd",
+      "species": "Bream",
+      "location": "2025-05-24T12:23:26.276Z",
+      "content": "Wentworth Point"
+    },
+    {
+      "blogId": 3,
+      "title": "Flathead on surface lure",
+      "date": "2025-05-24T12:47:45.507Z",
+      "species": "Flathead",
+      "location": "Narabeen Lagoon",
+      "content": "Wow so cool!"
+    },
+    {
+      "blogId": 4,
+      "title": "Kingfish finally!",
+      "date": "2025/5/24   22:53",
+      "species": "Kingfish",
+      "location": "Sydney Harbour",
+      "content": "Crazy"
+    }
+  ]
+}
