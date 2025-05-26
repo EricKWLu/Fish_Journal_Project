@@ -27,6 +27,25 @@ export async function blogListF() {
     return body;
 }
 
+export async function deleteBlogF(blogId: number) {
+  const res = await fetch(`${API_URL}/v1/blog/delete`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ blogId }),
+    });
+
+    const body = await res.json();
+
+    if (res.status === 400) {
+      console.error(body.error);
+      return res.status;
+    }
+  
+    return body;
+}
+
 export async function createBlogWrapperF(
     title: string,
     date: string,

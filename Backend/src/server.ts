@@ -64,7 +64,7 @@ app.post('/v1/blog/create', (req, res) => {
 })
 
 app.delete('/v1/blog/delete', (req, res) => {
-  const { blogId } = req.body;
+  const blogId = parseInt(req.body.blogId);
   loadBlogs();
 
   let result;
