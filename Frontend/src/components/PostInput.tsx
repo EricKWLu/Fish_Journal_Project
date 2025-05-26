@@ -23,6 +23,7 @@ const PostInput: React.FC = () => {
       const formattedDate = date.format('YYYY/M/D   H:m')
 
       createBlogWrapperF(title, formattedDate, species, location, content);
+      alert('Successfully created blog post')
 
       setTitle("");
       setDate(dayjs());

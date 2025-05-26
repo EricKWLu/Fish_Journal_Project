@@ -21,7 +21,7 @@ export async function blogListF() {
 
     if (res.status === 400) {
       console.error(body.error);
-      return res.status;
+      body;
     }
   
     return body;
@@ -40,7 +40,7 @@ export async function deleteBlogF(blogId: number) {
 
     if (res.status === 400) {
       console.error(body.error);
-      return res.status;
+      body;
     }
   
     return body;
@@ -65,7 +65,7 @@ export async function createBlogWrapperF(
   
     if (res.status === 400) {
       console.error(body.error);
-      return res.status;
+      body;
     }
   
     return body;

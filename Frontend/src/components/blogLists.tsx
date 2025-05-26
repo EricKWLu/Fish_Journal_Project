@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { blogListF } from '../frontendWrappers';
+import { blogListF, deleteBlogF } from '../frontendWrappers';
 import { Box, Button, TextField, Typography } from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
@@ -15,18 +15,19 @@ export interface Blog {
 function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
+  const fetchBlogs = async () => {
+      const data = await blogListF();
+
+      if (data.hasOwnProperty('error')) {
+          console.error('Error fetching blogs');
+          alert('Error listing blogs')
+      }
+      else {
+          setBlogs(data.blogs);
+      }
+  };
+
   useEffect(() => {
-    const fetchBlogs = async () => {
-        const data = await blogListF();
-
-        if (typeof data === 'number') {
-            console.error('Error fetching blogs');
-        }
-        else {
-            setBlogs(data.blogs);
-        }
-    };
-
     fetchBlogs();
   }, []);
 
@@ -61,6 +62,17 @@ function BlogList() {
                         <Button sx = {{
                             marginTop: '10px',
                             marginRight: '10px',
+                        }}
+                        onClick={async () => {
+                            const res = await deleteBlogF(blog.blogId);
+
+                            if (res.hasOwnProperty('error')) {
+                                console.error('Error deleting blog');
+                                alert('Error deleting blog');
+                            }
+                            else {
+                                await fetchBlogs();
+                            }
                         }}>
                             <DeleteOutlineIcon></DeleteOutlineIcon>
                         </Button>
