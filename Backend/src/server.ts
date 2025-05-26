@@ -12,7 +12,7 @@ import cors from 'cors';
 import process from 'process';
 import { handleError } from './errors';
 import { loadBlogs, saveBlogs } from '../dataStore';
-import { createBlog, listBlogs } from './blogs'
+import { createBlog, listBlogs, deleteBlog } from './blogs'
 import { clear } from './clear';
 
 const app = express();
@@ -63,6 +63,23 @@ app.post('/v1/blog/create', (req, res) => {
   return res.status(200).json(result);
 })
 
+app.delete('/v1/blog/delete', (req, res) => {
+  const { blogId } = req.body;
+  loadBlogs();
+
+  let result;
+
+  try {
+    result = deleteBlog(blogId);
+  } catch (error) {
+    return res.status(400).json({error: error.message});
+  }
+
+  saveBlogs();
+  return res.status(200).json(result);
+})
+
+//Return a list of created blogs
 app.get('/v1/blog/list', (req, res) => {
   loadBlogs();
   let result;

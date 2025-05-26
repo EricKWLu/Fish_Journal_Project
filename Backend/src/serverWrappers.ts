@@ -37,3 +37,17 @@ export function listBlogWrapper() {
 
   return body;
 }
+
+export function deleteBlogWrapper(blogId: number) {
+  const res = request('DELETE', `${url}/v1/blog/delete`, {
+    json: {blogId}
+  });
+
+  const body = JSON.parse(res.body.toString());
+  if ([400].includes(res.statusCode)) {
+    expect(body).toStrictEqual({ error: expect.any(String) });
+    return res.statusCode;
+  }
+
+  return body;
+}

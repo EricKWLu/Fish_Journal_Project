@@ -47,3 +47,23 @@ export function listBlogs() {
 
     return { size: size, blogs: array };
 }
+
+/**
+ * Deletes a given blog according to its blogId
+ * 
+ * @param blogId 
+ * @returns {}
+ */
+export function deleteBlog(blogId: number) {
+    const blogData: BlogData = getBlogs();
+
+    const index = blogData.blogs.findIndex((element) => element.blogId === blogId);
+
+    if (index === -1) {
+        throw new Error('Blog not found');
+    }
+
+    blogData.blogs.splice(index, 1);
+
+    return {};
+}
