@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { blogListF, deleteBlogF } from '../frontendWrappers';
 import { Box, Button, TextField, Typography } from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {toast} from "sonner"
 
 export interface Blog {
     blogId: number;
@@ -20,7 +21,7 @@ function BlogList() {
 
       if (data.hasOwnProperty('error')) {
           console.error('Error fetching blogs');
-          alert('Error listing blogs')
+          toast.error('Error listing blogs');
       }
       else {
           setBlogs(data.blogs);
@@ -64,13 +65,17 @@ function BlogList() {
                             marginRight: '10px',
                         }}
                         onClick={async () => {
+                            const confirmDelete = window.confirm(`Are you sure you want to delete "${blog.title}"?`);
+                            if (!confirmDelete) return;
+
                             const res = await deleteBlogF(blog.blogId);
 
                             if (res.hasOwnProperty('error')) {
                                 console.error('Error deleting blog');
-                                alert('Error deleting blog');
+                                toast.error('Error deleting blog');
                             }
                             else {
+                                toast.success(`Deleted blog: ${blog.title}`)
                                 await fetchBlogs();
                             }
                         }}>
