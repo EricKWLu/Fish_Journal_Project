@@ -1,6 +1,5 @@
-import { clearWrapper } from "../serverWrappers";
-import { clear } from "../clear";
+import { clearWrapper } from '../serverWrappers';
 
 test('Test return value', () => {
-    expect(clearWrapper()).toStrictEqual({});
-})
+  expect(clearWrapper()).toStrictEqual({});
+});
