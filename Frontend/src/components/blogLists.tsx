@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { blogListF } from '../frontendWrappers';
+import { blogListF, deleteBlogF } from '../frontendWrappers';
 import { Box, Button, TextField, Typography } from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {toast} from "sonner"
 
 export interface Blog {
     blogId: number;
@@ -15,18 +16,19 @@ export interface Blog {
 function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
+  const fetchBlogs = async () => {
+      const data = await blogListF();
+
+      if (data.hasOwnProperty('error')) {
+          console.error('Error fetching blogs');
+          toast.error('Error listing blogs');
+      }
+      else {
+          setBlogs(data.blogs);
+      }
+  };
+
   useEffect(() => {
-    const fetchBlogs = async () => {
-        const data = await blogListF();
-
-        if (typeof data === 'number') {
-            console.error('Error fetching blogs');
-        }
-        else {
-            setBlogs(data.blogs);
-        }
-    };
-
     fetchBlogs();
   }, []);
 
@@ -61,6 +63,21 @@ function BlogList() {
                         <Button sx = {{
                             marginTop: '10px',
                             marginRight: '10px',
+                        }}
+                        onClick={async () => {
+                            const confirmDelete = window.confirm(`Are you sure you want to delete "${blog.title}"?`);
+                            if (!confirmDelete) return;
+
+                            const res = await deleteBlogF(blog.blogId);
+
+                            if (res.hasOwnProperty('error')) {
+                                console.error('Error deleting blog');
+                                toast.error('Error deleting blog');
+                            }
+                            else {
+                                toast.success(`Deleted blog: ${blog.title}`)
+                                await fetchBlogs();
+                            }
                         }}>
                             <DeleteOutlineIcon></DeleteOutlineIcon>
                         </Button>

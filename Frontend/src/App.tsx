@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { CreatePage } from './pages/CreatePage'
 import { Navbar } from './components/Navbar'
+import { Toaster } from 'sonner'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Box sx = {{
         minHeight: '100vh',
       }}>
+        <Toaster richColors />
         <Navbar />
         <Box sx = {{
           height: '10vh'

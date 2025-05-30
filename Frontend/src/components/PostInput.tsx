@@ -6,8 +6,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import { createBlogWrapperF } from '../frontendWrappers';
 import { data } from 'react-router-dom';
+import {toast} from "sonner"
 
 //CREATE AN API AND CALL THAT TO PROPERLY STORE BLOGS
+//CHANGE ALERTS TO SONNER TOAST
 
 const PostInput: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -23,6 +25,7 @@ const PostInput: React.FC = () => {
       const formattedDate = date.format('YYYY/M/D   H:m')
 
       createBlogWrapperF(title, formattedDate, species, location, content);
+      toast.success('Successfuly created a new blog post!');
 
       setTitle("");
       setDate(dayjs());

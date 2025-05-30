@@ -18,6 +18,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js 20.x
@@ -33,6 +37,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js 20.x
@@ -40,12 +47,16 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
+        cache-dependency-path: Backend/package-lock.json
     - run: npm ci
     - name: Run linting
       run: npm run lint
 
   type-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js 20.x
@@ -53,6 +64,7 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
+        cache-dependency-path: Backend/package-lock.json
     - run: npm ci
     - name: Run type-checking
       run: npm run tsc

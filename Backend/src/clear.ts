@@ -1,15 +1,15 @@
-import { getBlogs } from "../dataStore";
-import { BlogData } from "../types";
+import { getBlogs } from '../dataStore';
+import { BlogData } from '../types';
 
 /**
  * Clears all data in datastore
- * 
- * @returns 
+ *
+ * @returns
  */
 export function clear() {
-    const blogData: BlogData = getBlogs();
+  const blogData: BlogData = getBlogs();
 
-    blogData.blogs = [];
+  blogData.blogs = [];
 
-    return {};
+  return {};
 }
