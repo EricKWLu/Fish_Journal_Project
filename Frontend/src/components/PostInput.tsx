@@ -17,6 +17,8 @@ const PostInput: React.FC = () => {
   const [species, setSpecies] = useState("");
   const [location, setLocation] = useState("");
   const [content, setContent] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,14 +26,31 @@ const PostInput: React.FC = () => {
 
       const formattedDate = date.format('YYYY/M/D   H:m')
 
-      createBlogWrapperF(title, formattedDate, species, location, content);
-      toast.success('Successfuly created a new blog post!');
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('date', formattedDate);
+      formData.append('species', species);
+      formData.append('location', location);
+      formData.append('content', content);
 
-      setTitle("");
-      setDate(dayjs());
-      setSpecies("");
-      setLocation("");
-      setContent("");
+      if (image) {
+        formData.append('image', image);
+      }
+
+      createBlogWrapperF(formData)
+      .then(() => {
+        toast.success('Successfuly created a new blog post!');
+
+        setTitle("");
+        setDate(dayjs());
+        setSpecies("");
+        setLocation("");
+        setContent("");
+        setImage(null);
+      })
+      .catch(() => toast.error('Failed to create post, make sure all required content is filled'));
+    } else{
+      toast.error('All fields excluding images are required');
     }
   };
 
@@ -88,6 +107,17 @@ const PostInput: React.FC = () => {
           multiline
           maxRows={15}
           sx={{ marginTop: '3vh', width: '90%' }}
+        />
+
+         <Typography variant="h5" sx={{ marginTop: '3vh' }}>Upload Image</Typography>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) setImage(file);
+          }}
+          style={{ marginTop: '2vh', marginBottom: '2vh' }}
         />
 
         <Button

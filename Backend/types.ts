@@ -5,6 +5,7 @@ export interface Blog {
     species: string;
     date: string;
     location: string;
+    imagePath: string | null;
 }
 
 export interface BlogData {

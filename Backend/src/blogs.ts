@@ -1,5 +1,6 @@
 import { getBlogs } from '../dataStore';
 import { Blog, BlogData } from '../types';
+import { Express } from 'express';
 
 /**
  * Creates a blog and returns the generated blogId
@@ -11,10 +12,11 @@ import { Blog, BlogData } from '../types';
  * @param {string}content
  * @returns {obj<blogId: number>}
  */
-export function createBlog(title: string, date: string, species: string, location: string, content: string) {
+export function createBlog(title: string, date: string, species: string, location: string, content: string, image?: Express.Multer.File
+) {
   const blogData: BlogData = getBlogs();
 
-  if (blogData.blogs.find(blog => blog.title === title)) {
+  if (getBlogs().blogs.find(blog => blog.title === title)) {
     throw new Error('This title already exists');
   }
 
@@ -26,6 +28,7 @@ export function createBlog(title: string, date: string, species: string, locatio
     species: species,
     location: location,
     content: content,
+    imagePath: image?.path || null,
   };
 
   blogData.blogs.push(newBlog);

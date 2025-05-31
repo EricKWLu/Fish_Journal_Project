@@ -21,7 +21,7 @@ export async function blogListF() {
 
     if (res.status === 400) {
       console.error(body.error);
-      body;
+      return null;
     }
   
     return body;
@@ -40,32 +40,41 @@ export async function deleteBlogF(blogId: number) {
 
     if (res.status === 400) {
       console.error(body.error);
-      body;
+      return null;
     }
   
     return body;
 }
 
-export async function createBlogWrapperF(
-    title: string,
-    date: string,
-    species: string,
-    location: string,
-    content: string
-  ) {
+export async function createBlogWrapperF(formData: FormData) {
     const res = await fetch(`${API_URL}/v1/blog/create`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, date, species, location, content }),
+      body: formData,
     });
   
     const body = await res.json();
   
     if (res.status === 400) {
       console.error(body.error);
-      body;
+      return null;
+    }
+  
+    return body;
+}
+
+export async function getBlogImageF(blogId: number) {
+    const res = await fetch(`${API_URL}/v1/blog/${blogId}/image`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
+    const body = await res.json();
+  
+    if (res.status === 404) {
+      console.error(body.error);
+      throw new Error(body.error || 'Image not found');
     }
   
     return body;

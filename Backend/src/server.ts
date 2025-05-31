@@ -10,13 +10,19 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import process from 'process';
-// import { handleError } from './errors';
-import { loadBlogs, saveBlogs } from '../dataStore';
+// import { handleError } from './errors';s
+import { loadBlogs, saveBlogs, getBlogs } from '../dataStore';
 import { createBlog, listBlogs, deleteBlog } from './blogs';
 import { clear } from './clear';
+import multer from 'multer';
+import fs from 'fs';
 
+const path = require('path');
+const upload = multer({
+  dest: path.join(__dirname, 'uploads/'),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 const app = express();
-app.use(json());
 app.use(cors());
 app.use(morgan('dev'));
 
@@ -39,6 +45,14 @@ const IP: string = process.env.IP || config.ip;
 
 // ==================================================
 
+app.use((req, res, next) => {
+  // Skip body parser if Content-Type is multipart
+  if (req.headers['content-type']?.startsWith('multipart/form-data')) {
+    return next();
+  }
+  json()(req, res, next);
+});
+
 // Clear data
 app.delete('/v1/clear', (req, res) => {
   const result = clear();
@@ -47,14 +61,16 @@ app.delete('/v1/clear', (req, res) => {
 });
 
 // Create a new blog
-app.post('/v1/blog/create', (req, res) => {
+app.post('/v1/blog/create', upload.single('image'), (req, res) => {
   const { title, content, species, date, location } = req.body;
+  const image = req.file;
+
   loadBlogs();
 
   let result;
 
   try {
-    result = createBlog(title, date, species, location, content);
+    result = createBlog(title, date, species, location, content, image);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -91,6 +107,25 @@ app.get('/v1/blog/list', (req, res) => {
   }
 
   return res.status(200).json(result);
+});
+
+// Get image corresponding to blog id
+app.get('/v1/blog/:id/image', (req, res) => {
+  const blogId = parseInt(req.params.id);
+  const blog = getBlogs().blogs.find(b => b.blogId === blogId);
+
+  if (!blog || !blog.imagePath) {
+    return res.status(404).send('Image not found');
+  }
+
+  const imagePath = path.resolve(__dirname, 'uploads', path.basename(blog.imagePath));
+
+  // Ensure the file exists before sending it
+  if (!fs.existsSync(imagePath)) {
+    return res.status(404).send('Image file not found on disk');
+  }
+
+  res.sendFile(imagePath);
 });
 
 // Start server

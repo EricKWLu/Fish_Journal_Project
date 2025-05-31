@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { blogListF, deleteBlogF } from '../frontendWrappers';
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {toast} from "sonner"
+import { toast } from "sonner";
+
+const BACKEND_URL = 'http://localhost:3000';
 
 export interface Blog {
-    blogId: number;
-    title: string;
-    content: string;
-    species: string;
-    date: string;
-    location: string;
+  blogId: number;
+  title: string;
+  content: string;
+  species: string;
+  date: string;
+  location: string;
 }
 
 function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
   const fetchBlogs = async () => {
-      const data = await blogListF();
+    const data = await blogListF();
 
-      if (data.hasOwnProperty('error')) {
-          console.error('Error fetching blogs');
-          toast.error('Error listing blogs');
-      }
-      else {
-          setBlogs(data.blogs);
-      }
+    if (data.hasOwnProperty('error')) {
+      console.error('Error fetching blogs');
+      toast.error('Error listing blogs');
+    } else {
+      setBlogs(data.blogs);
+    }
   };
 
   useEffect(() => {
@@ -33,90 +34,92 @@ function BlogList() {
   }, []);
 
   return (
-    <Box sx = {{
-        marginBottom: '20px'
-    }}>
-        {blogs.map((blog) => (
-            <Box className="blog-box" key={blog.blogId} sx = {{
-                width: '100vw',
-                minHeight: '30vh',
-                marginTop: '10vh',
-                display: 'flex',
-                justifyContent: 'center',
+    <Box sx={{ marginBottom: '20px' }}>
+      {blogs.map((blog) => {
+        return (
+          <Box className="blog-box" key={blog.blogId} sx={{
+            width: '100vw',
+            minHeight: '30vh',
+            marginTop: '10vh',
+            display: 'flex',
+            justifyContent: 'center',
+          }}>
+            <Box sx={{
+              backgroundColor: '#BFD5E2',
+              width: '70vw',
+              borderRadius: '10px',
             }}>
-                <Box sx = {{
-                    backgroundColor: '#BFD5E2',
-                    width: '70vw',
-                    borderRadius: '10px',
+              <Box sx={{ display: 'flex' }}>
+                <Typography variant="h5" sx={{
+                  marginLeft: '10px',
+                  marginTop: '10px',
+                  width: '95%'
                 }}>
-                    <Box sx = {{
-                        display: 'flex'
+                  {blog.title}
+                </Typography>
 
-                    }}>
-                        <Typography variant="h5" sx={{
-                        marginLeft: '10px',
-                        marginTop: '10px', 
-                        width: '95%'}}>
-                            {blog.title}
-                        </Typography>
-                        
-                        <Button sx = {{
-                            marginTop: '10px',
-                            marginRight: '10px',
-                        }}
-                        onClick={async () => {
-                            const confirmDelete = window.confirm(`Are you sure you want to delete "${blog.title}"?`);
-                            if (!confirmDelete) return;
+                <Button sx={{
+                  marginTop: '10px',
+                  marginRight: '10px',
+                }}
+                  onClick={async () => {
+                    const confirmDelete = window.confirm(`Are you sure you want to delete "${blog.title}"?`);
+                    if (!confirmDelete) return;
 
-                            const res = await deleteBlogF(blog.blogId);
+                    const res = await deleteBlogF(blog.blogId);
 
-                            if (res.hasOwnProperty('error')) {
-                                console.error('Error deleting blog');
-                                toast.error('Error deleting blog');
-                            }
-                            else {
-                                toast.success(`Deleted blog: ${blog.title}`)
-                                await fetchBlogs();
-                            }
-                        }}>
-                            <DeleteOutlineIcon></DeleteOutlineIcon>
-                        </Button>
-                    </Box>
+                    if (res.hasOwnProperty('error')) {
+                      console.error('Error deleting blog');
+                      toast.error('Error deleting blog');
+                    } else {
+                      toast.success(`Deleted blog: ${blog.title}`);
+                      await fetchBlogs();
+                    }
+                  }}>
+                  <DeleteOutlineIcon />
+                </Button>
+              </Box>
 
-                    <Box sx = {{
-                        width: '100%',
-                        padding: '10px',
-                        display: 'flex',
-                    }}>
-                        <img src='../src/assets/fishPlaceholder.png' alt="fish" style={{
-                            height: '20%',
-                            width: '20%',
-                        }}/>
+              <Box sx={{
+                width: '100%',
+                padding: '10px',
+                display: 'flex',
+              }}>
+                <img
+                  src={`${BACKEND_URL}/v1/blog/${blog.blogId}/image`}
+                  alt="Blog Image"
+                  onError={(e) => {
+                    console.log('Image load failed, using placeholder');
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/fishPlaceholder.png';
+                  }}
+                  style={{
+                    height: '20%',
+                    width: '20%',
+                  }}
+                />
 
-                        <Box sx = {{
-                            paddingLeft: '5%',
-                            direction: 'column',
-                        }}> 
-                            <Typography variant="h6">
-                                Species: {blog.species}
-                            </Typography>
+                <Box sx={{
+                  paddingLeft: '5%',
+                  direction: 'column',
+                }}>
+                  <Typography variant="h6">
+                    Species: {blog.species}
+                  </Typography>
 
-                            <Typography variant="h6" sx = {{
-                                paddingTop: '10px'
-                            }}>
-                                Location: {blog.location}
-                            </Typography>
+                  <Typography variant="h6" sx={{ paddingTop: '10px' }}>
+                    Location: {blog.location}
+                  </Typography>
 
-                            <Typography variant="h6" sx = {{
-                                paddingTop: '10px'
-                            }}>
-                                Date/Time: {blog.date}
-                            </Typography>
-                        </Box>
-                    </Box>
+                  <Typography variant="h6" sx={{ paddingTop: '10px' }}>
+                    Date/Time: {blog.date}
+                  </Typography>
                 </Box>
+              </Box>
             </Box>
-        ))}
+          </Box>
+        );
+      })}
     </Box>
   );
 }
